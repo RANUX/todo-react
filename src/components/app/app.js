@@ -38,10 +38,6 @@ class App extends Component {
     }
 
     createTodoItem(label) {
-        // const { todoData = [] } = this.state;
-        // const maxId = todoData.reduce((maxId, { id }) => {
-        //     return maxId < id ? id : maxId
-        // }, 0);
         return {
             label: label,
             important: false,
@@ -94,6 +90,18 @@ class App extends Component {
         });
     }
 
+    onFilter = (filter) => {
+        this.setState(({ todoData }) => {
+            return todoData.map((el) => {
+                el.visible = false;
+                if (filter === 'done' && el.done) el.visible = true;
+                else if (filter === 'active' && !el.done) el.visible = true;
+                else if (filter === 'all') el.visible = true;
+                return el;
+            });
+        });
+    }
+
     render() {
         const { todoData } = this.state;
         return (
@@ -101,7 +109,7 @@ class App extends Component {
               <AppHeader toDo={1} done={3} />
               <div className="top-panel d-flex">
                 <SearchPanel onSearch={ this.onSearch } />
-                <ItemStatusFilter />
+                <ItemStatusFilter onFilter={ this.onFilter } />
               </div>
         
               <TodoList 
