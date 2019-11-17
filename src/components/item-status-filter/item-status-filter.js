@@ -1,35 +1,33 @@
 import React, { Component } from 'react';
 
+import FilterButton from './filter-button';
 import './item-status-filter.css';
 
 export default class ItemStatusFilter extends Component {
-  state = {
-    currentButton: 'all'
-  }
 
-  highlight(buttonName) {
-    return this.state.currentButton === buttonName ? 'btn-info' : 'btn-outline-secondary';
-  }
 
-  onFilterButton(buttonName) {
-    this.props.onFilter(buttonName);
-    this.setState({
-      currentButton: buttonName
+  buttons = [
+    { name: 'all', label: 'All' },
+    { name: 'active', label: 'Active'},
+    { name: 'done', label: 'Done' }
+  ]
+
+  filterButtons() {
+    const {filter , onFilter } = this.props;
+
+    return this.buttons.map(({name, label}) => {
+      return (<FilterButton key={name}
+                            name={name} 
+                            label={label} 
+                            highlight={filter === name}
+                            onButtonClick={onFilter} />);
     });
   }
 
   render() {
     return (
       <div className="btn-group">
-        <button type="button"
-                className={`btn ${this.highlight('all')}`}
-                onClick={() => this.onFilterButton('all')}>All</button>
-        <button type="button"
-                className={`btn ${this.highlight('active')}`}
-                onClick={() => this.onFilterButton('active')}>Active</button>
-        <button type="button"
-                className={`btn ${this.highlight('done')}`}
-                onClick={() => this.onFilterButton('done')}>Done</button>
+        {this.filterButtons()}
       </div>
     );
   }

@@ -121,17 +121,17 @@ class App extends Component {
             <div className="todo-app">
               <AppHeader toDo={1} done={3} />
               <div className="top-panel d-flex">
-                <SearchPanel onSearch={ this.onSearch } />
-                <ItemStatusFilter onFilter={ this.onFilter } />
+                <SearchPanel onSearch={this.onSearch} />
+                <ItemStatusFilter filter={this.state.filter} onFilter={this.onFilter} />
               </div>
         
               <TodoList 
-                todos={ filteredItems } 
-                onDeleted={ this.deleteItem } 
-                onToggleImportant={ this.onToggleImportant }
-                onToggleDone={ this.onToggleDone }
+                todos={filteredItems} 
+                onDeleted={this.deleteItem} 
+                onToggleImportant={this.onToggleImportant}
+                onToggleDone={this.onToggleDone}
                 />
-              <ItemAddForm onAdd={ this.addItem }/>
+              <ItemAddForm onAdd={this.addItem}/>
             </div>
           );
     }
