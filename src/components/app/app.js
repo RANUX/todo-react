@@ -12,7 +12,9 @@ class App extends Component {
     maxId = 0;
 
     state = {
-        todoData: []
+        todoData: [],
+        term: '',
+        filter: 'all'
     }
 
     componentDidMount() {
@@ -42,7 +44,6 @@ class App extends Component {
             label: label,
             important: false,
             done: false,
-            visible: true,
             id: ++this.maxId
         }
     }
@@ -79,31 +80,43 @@ class App extends Component {
         });
     }
 
+    search(items, term) {
+        if (term.length === 0) return items;
+
+        return items.filter((el) => {
+            const labelLowered = el.label.toLowerCase();
+            const termLowered = term.toLowerCase();
+            return labelLowered.indexOf(termLowered) >= 0;
+        });
+    }
+
     onSearch = (text) => {
-        this.setState(({ todoData }) => {
-            return todoData.map((el) => {
-                const labelLowered = el.label.toLowerCase();
-                const textLowered = text.toLowerCase();
-                labelLowered.indexOf(textLowered) >= 0 ? el.visible = true : el.visible = false;
-                return el;
-            });
+        this.setState({
+            term: text
+        });
+    }
+
+    filter(items, filter) {
+        if (filter === 'all') return items;
+
+        return items.filter((el) => {
+            if (filter === 'done' && el.done) return true;
+            else if (filter === 'active' && !el.done) return true;
+            return false;
         });
     }
 
     onFilter = (filter) => {
-        this.setState(({ todoData }) => {
-            return todoData.map((el) => {
-                el.visible = false;
-                if (filter === 'done' && el.done) el.visible = true;
-                else if (filter === 'active' && !el.done) el.visible = true;
-                else if (filter === 'all') el.visible = true;
-                return el;
-            });
+        this.setState({
+            filter
         });
     }
 
     render() {
-        const { todoData } = this.state;
+        const { todoData, term, filter } = this.state;
+        let visibleItems = this.search(todoData, term);
+        let filteredItems = this.filter(visibleItems, filter);
+
         return (
             <div className="todo-app">
               <AppHeader toDo={1} done={3} />
@@ -113,7 +126,7 @@ class App extends Component {
               </div>
         
               <TodoList 
-                todos={ todoData } 
+                todos={ filteredItems } 
                 onDeleted={ this.deleteItem } 
                 onToggleImportant={ this.onToggleImportant }
                 onToggleDone={ this.onToggleDone }

@@ -5,11 +5,9 @@ export default class SearchPanel extends Component {
     text: ''
   }
 
-  onTextChanged = (event) => {
+  onSearchCange = (event) => {
     const text = event.target.value;
-    this.setState({
-      text
-    });
+    this.setState({ text });
     this.props.onSearch(text);
   }
 
@@ -18,7 +16,7 @@ export default class SearchPanel extends Component {
       <input type="text"
              className="form-control search-input"
              placeholder="type to search"
-             onChange={this.onTextChanged}
+             onChange={this.onSearchCange}
              value={this.state.text} />
     );
   }
